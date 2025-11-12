@@ -58,19 +58,34 @@
 //!
 //! ## Re-exports
 //!
-//! All Candle crates are re-exported under intuitive module names:
-//! - `candlelight::core` → `candle_core`
-//! - `candlelight::nn` → `candle_nn`
-//! - `candlelight::transformers` → `candle_transformers`
-//! - `candlelight::flash_attn` → `candle_flash_attn` (when `flash-attn` feature enabled)
-//! - `candlelight::layer_norm` → `candle_layer_norm` (when `layer-norm` feature enabled)
-//! - `candlelight::datasets` → `candle_datasets` (when `datasets` feature enabled)
+//! **Comprehensive Access**: Candlelight re-exports the entire Candle ecosystem for maximum convenience.
+//! Since Rust eliminates dead code, unused re-exports add no runtime overhead.
 //!
-//! Common types are also re-exported at the crate root for convenience.
+//! ### Core Access Patterns
+//! ```rust,no_run
+//! // Direct access to everything
+//! use candlelight::*;
+//!
+//! // Specific module access
+//! use candlelight::nn::*;
+//! use candlelight::transformers_models::*;
+//!
+//! // Convenient prelude
+//! use candlelight::prelude::*;
+//! ```
+//!
+//! ### Module Structure
+//! - `candlelight::*` → All of `candle_core` + common items
+//! - `candlelight::nn::*` → Complete `candle_nn` module  
+//! - `candlelight::transformers_models::*` → Complete `candle_transformers`
+//! - `candlelight::backprop::*` → Complete `candle_core::backprop`
+//! - `candlelight::flash_attention::*` → Complete `candle_flash_attn` (when enabled)
+//! - `candlelight::fused_ops::*` → Complete `candle_layer_norm` (when enabled)
+//! - `candlelight::data::*` → Complete `candle_datasets` (when enabled)
+//! - `candlelight::prelude::*` → Curated selection of most common items
 
 // Re-export Candle crates
 pub use candle_core as core;
-pub use candle_nn as nn;
 pub use candle_transformers as transformers;
 
 #[cfg(feature = "flash-attn")]
@@ -82,21 +97,119 @@ pub use candle_layer_norm as layer_norm;
 #[cfg(feature = "datasets")]
 pub use candle_datasets as datasets;
 
-// Re-export commonly used types for convenience
-pub use candle_core::{DType, Device, Error, Result, Shape, Tensor};
+// Comprehensive re-exports for optional features
+#[cfg(feature = "flash-attn")]
+pub mod flash_attention {
+    pub use candle_flash_attn::*;
+}
+
+#[cfg(feature = "layer-norm")]
+pub mod fused_ops {
+    pub use candle_layer_norm::*;
+}
+
+#[cfg(feature = "datasets")]
+pub mod data {
+    pub use candle_datasets::*;
+}
+
+// Comprehensive transformers re-exports for easy access
+pub mod transformers_models {
+    pub use candle_transformers::*;
+}
+
+// Re-export commonly used types for convenience from the root
+pub use candle_core::{DType, Device, Error, IndexOp, Module, Result, Shape, Tensor, Var};
 pub use candle_nn::VarBuilder;
 
-/// Module containing all Candle core functionality
-pub mod prelude {
-    pub use candle_core::{DType, Device, Error, Module, Result, Shape, Tensor};
+// Re-export everything from candle-core at the root for maximum convenience
+pub use candle_core::*;
+
+// Re-export nn module items at candlelight::nn::*
+pub mod nn {
+    // Re-export the entire candle_nn module
+    pub use candle_nn::*;
+
+    // Explicitly re-export key items for clarity (these should already be available via the glob import above)
     pub use candle_nn::{
-        loss, ops, Activation, Conv1d, Conv2d, Embedding, LayerNorm, Linear, RmsNorm, VarBuilder,
+        // Layer constructor functions
+        embedding,
+        layer_norm,
+        linear,
+        // Optimizers
+        optim::{AdamW, Optimizer, ParamsAdamW, SGD},
+
+        // Layer types
+        Dropout,
+        Embedding,
+        LayerNorm,
+        Linear,
+
+        // Variable management
+        VarBuilder,
+        VarMap,
+    };
+}
+
+// Re-export backprop module items at candlelight::backprop::*
+pub mod backprop {
+    // Re-export everything from candle_core::backprop
+    pub use candle_core::backprop::*;
+}
+/// Curated re-exports of the most commonly used Candle functionality
+///
+/// This prelude includes the essential types and functions you'll need for most ML tasks,
+/// without overwhelming you with the full API surface. For complete access, use the
+/// individual modules or glob imports.
+pub mod prelude {
+    // Essential core types
+    pub use candle_core::{
+        // Common macros/functions
+        bail,
+        DType,
+        Device,
+        Error,
+        IndexOp,
+        Module,
+        Result,
+        Shape,
+        Tensor,
+        Var,
+    };
+
+    // Essential neural network components
+    pub use candle_nn::{
+        // Layer constructor functions
+        embedding,
+        layer_norm,
+        linear,
+        // Loss functions
+        loss::{cross_entropy, mse},
+        // Optimizers
+        optim::{AdamW, Optimizer, ParamsAdamW, SGD},
+        // Common layers
+        Activation,
+        Conv1d,
+        Conv2d,
+        Dropout,
+        Embedding,
+        // Initialization
+        Init,
+        LayerNorm,
+        Linear,
+        RmsNorm,
+        // Variable management
+        VarBuilder,
         VarMap,
     };
 
+    // Backpropagation essentials
+    pub use candle_core::backprop::GradStore;
+
+    // Optional features
     #[cfg(feature = "flash-attn")]
     pub use candle_flash_attn::flash_attn;
 
     #[cfg(feature = "layer-norm")]
-    pub use candle_layer_norm::{layer_norm, rms_norm};
+    pub use candle_layer_norm::{layer_norm as fused_layer_norm, rms_norm};
 }
