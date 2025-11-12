@@ -1,0 +1,57 @@
+[package]
+    authors = ["Lightbulb Contributors"]
+    categories = ["mathematics", "science"]
+    description = "Unified wrapper for the Candle ML framework ecosystem"
+    documentation = "https://docs.rs/candlelight"
+    edition = "2021"
+    homepage = "https://github.com/ciresnave/candlelight"
+    keywords = [
+        "candle",
+        "deep-learning",
+        "machine-learning",
+        "neural-networks",
+        "pytorch",
+    ]
+    license = "MIT OR Apache-2.0"
+    name = "candlelight"
+    readme = "README.md"
+    repository = "https://github.com/ciresnave/candlelight"
+    version = "0.1.0"
+
+[features]
+    default = []
+
+    # Hardware acceleration
+    cuda = ["candle-core/cuda", "candle-nn/cuda", "candle-transformers/cuda"]
+    metal = [
+        "candle-core/metal",
+        "candle-nn/metal",
+        "candle-transformers/metal",
+    ]
+
+    # CUDA optimizations (require cuda feature)
+    flash-attn = ["candle-flash-attn", "cuda"]
+    layer-norm = ["candle-layer-norm", "cuda"]
+
+    # Convenience: enable all CUDA optimizations
+    cuda-full = ["cuda", "flash-attn", "layer-norm"]
+
+    # Data loading utilities
+    datasets = ["candle-datasets"]
+
+[dependencies]
+    # Core Candle framework - using git snapshot for CUDA 13.0 support via cudarc 0.17.1+
+    # Temporary: Will switch to stable releases once Candle v0.10 is published
+    candle-core         = { git = "https://github.com/huggingface/candle", rev = "db08cc0a5a786e00f873c35ced7db51fd7d7083a" }
+    candle-nn           = { git = "https://github.com/huggingface/candle", rev = "db08cc0a5a786e00f873c35ced7db51fd7d7083a" }
+    candle-transformers = { git = "https://github.com/huggingface/candle", rev = "db08cc0a5a786e00f873c35ced7db51fd7d7083a" }
+
+    # Optional CUDA accelerations
+    candle-flash-attn = { git = "https://github.com/huggingface/candle", rev = "db08cc0a5a786e00f873c35ced7db51fd7d7083a", optional = true }
+
+    # Note: candle-layer-norm is a separate package, not in the main Candle repo
+    # Using crates.io version for now - if incompatible with git snapshot, may need to disable
+    candle-layer-norm = { version = "0.0.1", optional = true }
+
+    # Data utilities (optional)
+    candle-datasets = { git = "https://github.com/huggingface/candle", rev = "db08cc0a5a786e00f873c35ced7db51fd7d7083a", optional = true }

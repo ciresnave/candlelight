@@ -1,0 +1,27 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+*.pdb
+
+# Cargo lock file (libraries shouldn't commit this)
+Cargo.lock
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Profiling and coverage
+*.profraw
+*.profdata
+*.gcda
+*.gcno
+*.gcov
+lcov.info
+coverage/
+
+# Documentation builds
+/doc/
