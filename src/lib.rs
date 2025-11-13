@@ -91,6 +91,8 @@
 //! - `candlelight::nn::*` → Complete `candle_nn` module  
 //! - `candlelight::transformers_models::*` → Complete `candle_transformers`
 //! - `candlelight::backprop::*` → Complete `candle_core::backprop`
+//! - `candlelight::quantized::*` → Complete `candle_core::quantized`
+//! - `candlelight::safetensors::*` → Complete `candle_core::safetensors`
 //! - `candlelight::flash_attention::*` → Complete `candle_flash_attn`
 //! - `candlelight::fused_ops::*` → Complete `candle_layer_norm`
 //! - `candlelight::data::*` → Complete `candle_datasets`
@@ -211,6 +213,19 @@ pub mod backprop {
     // Re-export everything from candle_core::backprop
     pub use candle_core::backprop::*;
 }
+
+// Re-export quantized module for quantized tensor support at candlelight::quantized::*
+pub mod quantized {
+    // Re-export everything from candle_core::quantized
+    pub use candle_core::quantized::*;
+}
+
+// Re-export safetensors module for SafeTensors loading at candlelight::safetensors::*
+pub mod safetensors {
+    // Re-export everything from candle_core::safetensors
+    pub use candle_core::safetensors::*;
+}
+
 /// Curated re-exports of the most commonly used Candle functionality
 ///
 /// This prelude includes the essential types and functions you'll need for most ML tasks,
