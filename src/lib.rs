@@ -119,7 +119,13 @@ pub mod data {
 
 #[cfg(feature = "optimizers")]
 pub mod optimizers {
+    // Re-export all top-level items (traits, enums, etc.)
     pub use candle_optimisers::*;
+    
+    // Re-export all optimizer modules
+    pub use candle_optimisers::{
+        adadelta, adagrad, adam, adamax, esgd, lbfgs, nadam, radam, rmsprop,
+    };
 }
 
 // Comprehensive transformers re-exports for easy access
