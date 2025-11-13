@@ -26,23 +26,35 @@
 //!
 //! ## Features
 //!
+//! **"It Just Works" Philosophy**: All features are enabled by default for maximum convenience.
+//! Users who need minimal compilation times can opt-out with `default-features = false`.
+//!
 //! ### Hardware Acceleration
 //! - `cuda` - Enable CUDA GPU support (NVIDIA GPUs)
 //! - `metal` - Enable Metal GPU support (Apple Silicon)
 //!
 //! ### CUDA Optimizations (require `cuda`)
-//! - `flash-attn` - FlashAttention-2 for efficient attention computation
-//! - `layer-norm` - Fused LayerNorm/RMSNorm kernels (~20-30% speedup)
+//! - `flash-attn` - FlashAttention-2 for efficient attention computation (default)
+//! - `layer-norm` - Fused LayerNorm/RMSNorm kernels (~20-30% speedup) (default)
 //! - `cuda-full` - Convenience feature enabling all CUDA optimizations
 //!
-//! ### Utilities
+//! ### Utilities (all enabled by default)
 //! - `datasets` - Dataset loading utilities
+//! - `optimizers` - Advanced gradient-based optimizers (Adam, SGD, RMSprop, etc.)
+//! - `basin-hopping` - Global optimization via basin hopping
 //!
 //! ## Usage
 //!
+//! ### Default (Everything Enabled)
 //! ```toml
 //! [dependencies]
-//! candlelight = { path = "../candlelight", features = ["cuda", "flash-attn"] }
+//! candlelight = { path = "../candlelight", features = ["cuda"] }
+//! ```
+//!
+//! ### Minimal Build (Opt-out of defaults)
+//! ```toml
+//! [dependencies]
+//! candlelight = { path = "../candlelight", default-features = false }
 //! ```
 //!
 //! ```rust,no_run
@@ -79,11 +91,11 @@
 //! - `candlelight::nn::*` → Complete `candle_nn` module  
 //! - `candlelight::transformers_models::*` → Complete `candle_transformers`
 //! - `candlelight::backprop::*` → Complete `candle_core::backprop`
-//! - `candlelight::flash_attention::*` → Complete `candle_flash_attn` (when enabled)
-//! - `candlelight::fused_ops::*` → Complete `candle_layer_norm` (when enabled)
-//! - `candlelight::data::*` → Complete `candle_datasets` (when enabled)
-//! - `candlelight::optimizers::*` → Complete `candle_optimizers` (when enabled)
-//! - `candlelight::basin_hopping::*` → Basin hopping global optimization (when enabled)
+//! - `candlelight::flash_attention::*` → Complete `candle_flash_attn`
+//! - `candlelight::fused_ops::*` → Complete `candle_layer_norm`
+//! - `candlelight::data::*` → Complete `candle_datasets`
+//! - `candlelight::optimizers::*` → Complete `candle_optimizers`
+//! - `candlelight::basin_hopping::*` → Basin hopping global optimization
 //! - `candlelight::prelude::*` → Curated selection of most common items
 
 // Re-export Candle crates
@@ -105,7 +117,7 @@ pub use candle_optimisers as optimisers;
 #[cfg(feature = "basin-hopping")]
 pub use candle_bhop as bhop;
 
-// Comprehensive re-exports for optional features
+// Comprehensive re-exports for features (enabled by default)
 #[cfg(feature = "flash-attn")]
 pub mod flash_attention {
     pub use candle_flash_attn::*;
@@ -249,7 +261,7 @@ pub mod prelude {
     // Backpropagation essentials
     pub use candle_core::backprop::GradStore;
 
-    // Optional features
+    // Features enabled by default - always available unless opt-out
     #[cfg(feature = "flash-attn")]
     pub use candle_flash_attn::flash_attn;
 
