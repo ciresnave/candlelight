@@ -126,6 +126,24 @@ pub mod optimizers {
     pub use candle_optimisers::{
         adadelta, adagrad, adam, adamax, esgd, lbfgs, nadam, radam, rmsprop,
     };
+    
+    // Re-export optimizer structs at module level for convenience
+    pub use candle_optimisers::adam::{Adam, ParamsAdam};
+    pub use candle_optimisers::adadelta::{Adadelta, ParamsAdaDelta};
+    pub use candle_optimisers::adagrad::{Adagrad, ParamsAdaGrad};
+    pub use candle_optimisers::adamax::{Adamax, ParamsAdaMax};
+    pub use candle_optimisers::esgd::{ParamsSGD, SGD};
+    pub use candle_optimisers::lbfgs::{Lbfgs, ParamsLBFGS};
+    pub use candle_optimisers::nadam::{NAdam, ParamsNAdam};
+    pub use candle_optimisers::radam::{ParamsRAdam, RAdam};
+    pub use candle_optimisers::rmsprop::{ParamsRMSprop, RMSprop};
+    
+    // Convenience aliases for common alternate names
+    pub use esgd as sgd;
+    pub use SGD as Sgd;
+    pub use ParamsSGD as ParamsSgd;
+    pub use RMSprop as Rmsprop;
+    pub use RAdam as Radam;
 }
 
 // Comprehensive transformers re-exports for easy access
