@@ -82,6 +82,7 @@
 //! - `candlelight::flash_attention::*` → Complete `candle_flash_attn` (when enabled)
 //! - `candlelight::fused_ops::*` → Complete `candle_layer_norm` (when enabled)
 //! - `candlelight::data::*` → Complete `candle_datasets` (when enabled)
+//! - `candlelight::optimizers::*` → Complete `candle_optimizers` (when enabled)
 //! - `candlelight::prelude::*` → Curated selection of most common items
 
 // Re-export Candle crates
@@ -97,6 +98,9 @@ pub use candle_layer_norm as layer_norm;
 #[cfg(feature = "datasets")]
 pub use candle_datasets as datasets;
 
+#[cfg(feature = "optimizers")]
+pub use candle_optimisers as optimisers;
+
 // Comprehensive re-exports for optional features
 #[cfg(feature = "flash-attn")]
 pub mod flash_attention {
@@ -111,6 +115,11 @@ pub mod fused_ops {
 #[cfg(feature = "datasets")]
 pub mod data {
     pub use candle_datasets::*;
+}
+
+#[cfg(feature = "optimizers")]
+pub mod optimizers {
+    pub use candle_optimisers::*;
 }
 
 // Comprehensive transformers re-exports for easy access

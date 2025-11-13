@@ -16,7 +16,7 @@
     name = "candlelight"
     readme = "README.md"
     repository = "https://github.com/ciresnave/candlelight"
-    version = "0.1.0"
+    version = "0.2.0"
 
 [features]
     default = []
@@ -38,6 +38,9 @@
 
     # Data loading utilities
     datasets = ["candle-datasets"]
+    
+    # Advanced optimizers
+    optimizers = ["candle-optimisers"]
 
 [dependencies]
     # Core Candle framework - using git snapshot for CUDA 13.0 support via cudarc 0.17.1+
@@ -55,3 +58,6 @@
 
     # Data utilities (optional)
     candle-datasets = { git = "https://github.com/huggingface/candle", rev = "db08cc0a5a786e00f873c35ced7db51fd7d7083a", optional = true }
+    
+    # Additional optimizers from crates.io
+    candle-optimisers = { version = "0.10.0-alpha.1", optional = true }
