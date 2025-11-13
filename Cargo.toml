@@ -63,9 +63,9 @@
     # Optional CUDA accelerations
     candle-flash-attn = { git = "https://github.com/huggingface/candle", rev = "db08cc0a5a786e00f873c35ced7db51fd7d7083a", optional = true }
 
-    # Fused LayerNorm/RMSNorm - using our fork with updated dependencies for CUDA 13.0 compatibility
+    # Fused LayerNorm/RMSNorm - using our fork with updated dependencies for CUDA 13.0 compatibility + Windows large object fix
     # PR will be submitted to upstream: https://github.com/EricLBuehler/candle-layer-norm
-    candle-layer-norm = { git = "https://github.com/ciresnave/candle-layer-norm", branch = "update-candle-deps-for-cuda-13", optional = true }
+    candle-layer-norm = { git = "https://github.com/ciresnave/candle-layer-norm", optional = true }
 
     # Data utilities (optional)
     candle-datasets = { git = "https://github.com/huggingface/candle", rev = "db08cc0a5a786e00f873c35ced7db51fd7d7083a", optional = true }
