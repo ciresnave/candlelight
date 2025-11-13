@@ -83,6 +83,7 @@
 //! - `candlelight::fused_ops::*` → Complete `candle_layer_norm` (when enabled)
 //! - `candlelight::data::*` → Complete `candle_datasets` (when enabled)
 //! - `candlelight::optimizers::*` → Complete `candle_optimizers` (when enabled)
+//! - `candlelight::basin_hopping::*` → Basin hopping global optimization (when enabled)
 //! - `candlelight::prelude::*` → Curated selection of most common items
 
 // Re-export Candle crates
@@ -100,6 +101,9 @@ pub use candle_datasets as datasets;
 
 #[cfg(feature = "optimizers")]
 pub use candle_optimisers as optimisers;
+
+#[cfg(feature = "basin-hopping")]
+pub use candle_bhop as bhop;
 
 // Comprehensive re-exports for optional features
 #[cfg(feature = "flash-attn")]
@@ -121,29 +125,35 @@ pub mod data {
 pub mod optimizers {
     // Re-export all top-level items (traits, enums, etc.)
     pub use candle_optimisers::*;
-    
+
     // Re-export all optimizer modules
     pub use candle_optimisers::{
         adadelta, adagrad, adam, adamax, esgd, lbfgs, nadam, radam, rmsprop,
     };
-    
+
     // Re-export optimizer structs at module level for convenience
-    pub use candle_optimisers::adam::{Adam, ParamsAdam};
     pub use candle_optimisers::adadelta::{Adadelta, ParamsAdaDelta};
     pub use candle_optimisers::adagrad::{Adagrad, ParamsAdaGrad};
+    pub use candle_optimisers::adam::{Adam, ParamsAdam};
     pub use candle_optimisers::adamax::{Adamax, ParamsAdaMax};
     pub use candle_optimisers::esgd::{ParamsSGD, SGD};
     pub use candle_optimisers::lbfgs::{Lbfgs, ParamsLBFGS};
     pub use candle_optimisers::nadam::{NAdam, ParamsNAdam};
     pub use candle_optimisers::radam::{ParamsRAdam, RAdam};
     pub use candle_optimisers::rmsprop::{ParamsRMSprop, RMSprop};
-    
+
     // Convenience aliases for common alternate names
     pub use esgd as sgd;
-    pub use SGD as Sgd;
     pub use ParamsSGD as ParamsSgd;
-    pub use RMSprop as Rmsprop;
     pub use RAdam as Radam;
+    pub use RMSprop as Rmsprop;
+    pub use SGD as Sgd;
+}
+
+#[cfg(feature = "basin-hopping")]
+pub mod basin_hopping {
+    // Re-export everything from candle-bhop
+    pub use candle_bhop::*;
 }
 
 // Comprehensive transformers re-exports for easy access
