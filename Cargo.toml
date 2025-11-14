@@ -23,10 +23,10 @@
     # Users can opt-out with `default-features = false` if needed
     default = [
         "flash-attn",
-        "layer-norm",
         "datasets",
         "optimizers",
         "basin-hopping",
+        "layer-norm",
     ]
 
     # Hardware acceleration
@@ -63,7 +63,7 @@
     # Optional CUDA accelerations
     candle-flash-attn = { git = "https://github.com/huggingface/candle", rev = "db08cc0a5a786e00f873c35ced7db51fd7d7083a", optional = true }
 
-    # Fused LayerNorm/RMSNorm - using our fork with updated dependencies for CUDA 13.0 compatibility + Windows large object fix
+    # Fused LayerNorm/RMSNorm - using our fork with updated dependencies for CUDA 13.0 compatibility + Windows large object fix + cudarc 0.17.8 API compatibility
     # PR will be submitted to upstream: https://github.com/EricLBuehler/candle-layer-norm
     candle-layer-norm = { git = "https://github.com/ciresnave/candle-layer-norm", optional = true }
 
