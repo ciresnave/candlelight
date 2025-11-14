@@ -11,31 +11,44 @@ The Candle ecosystem consists of multiple crates that must be kept in sync:
 - `candle-nn` - Neural network layers  
 - `candle-transformers` - Transformer implementations
 - `candle-flash-attn` - FlashAttention-2 optimization
-- `candle-layer-norm` - Fused kernel optimizations
+- `candle-layer-norm` - Fused LayerNorm/RMSNorm kernels
+- `candle-datasets` - Dataset loading utilities
+- `candle-optimisers` - Advanced optimizers (AdamW, Lion, etc.)
+- `candle-bhop` - Basin-hopping global optimization
 
 Managing these across multiple projects is tedious and error-prone. Candlelight solves this by centralizing version management.
 
 ## Current Status: Git Snapshot
 
-⚠️ **Temporary Git Dependency**: Currently using Candle git snapshot `db08cc0a` to support:
-- CUDA 13.0 (via cudarc 0.17.1+)
-- Visual Studio 2022 v17.12+ compatibility
+⚠️ **Temporary Git Dependencies**: Currently using git snapshots to support:
+- **Candle** (git rev `db08cc0a`) - CUDA 13.0 support via cudarc 0.17.8+
+- **candle-layer-norm** - [Fork](https://github.com/ciresnave/candle-layer-norm) with CUDA 13.0 + cudarc 0.17.8 + Windows MSVC fixes ([PR #2](https://github.com/EricLBuehler/candle-layer-norm/pull/2))
+- **candle-optimisers** - [Fork](https://github.com/ciresnave/candle-optimisers) updated for Candle v0.9.2-alpha.1 ([PR #29](https://github.com/KGrewal1/optimisers/pull/29))
+- **candle-bhop** - [Fork](https://github.com/ciresnave/candle-bhop) updated for Candle v0.9.2-alpha.1 ([PR #1](https://github.com/KGrewal1/candle-bhop/pull/1))
 
-Once Candle v0.10 is released with these features, we'll switch to stable crates.io releases.
+Once upstream PRs are merged and Candle v0.10 is released, we'll switch to stable crates.io releases.
+
+## Philosophy: "It Just Works"
+
+All features are **enabled by default** for the best out-of-box experience. Users can opt-out with `default-features = false` if they need a minimal configuration.
 
 ## Features
 
+### Default Features (Enabled Automatically)
+Following the "it just works" philosophy, these features are enabled by default:
+- ✅ `flash-attn` - FlashAttention-2 optimization (requires CUDA)
+- ✅ `layer-norm` - Fused LayerNorm/RMSNorm kernels (requires CUDA)
+- ✅ `cudnn` - cuDNN optimizations (requires cuDNN installation)
+- ✅ `datasets` - Dataset loading utilities
+- ✅ `optimizers` - Advanced optimizers (AdamW, Lion, Sophia, etc.)
+- ✅ `basin-hopping` - Basin-hopping global optimization
+
 ### Hardware Acceleration
-- `cuda` - NVIDIA GPU support via CUDA
+- `cuda` - NVIDIA GPU support via CUDA (auto-enabled by default features)
 - `metal` - Apple Silicon GPU support via Metal
 
-### CUDA Optimizations
-- `flash-attn` - FlashAttention-2 (requires `cuda`)
-- `layer-norm` - Fused LayerNorm/RMSNorm kernels (requires `cuda`)
-- `cuda-full` - All CUDA optimizations (convenience feature)
-
-### Utilities
-- `datasets` - Dataset loading utilities
+### Additional Features
+- `cuda-full` - All CUDA optimizations (convenience feature, redundant with defaults)
 
 ## Installation
 
@@ -44,13 +57,14 @@ Add Candlelight to your `Cargo.toml`:
 ```toml
 [dependencies]
 # From GitHub (recommended until crates.io publication)
-candlelight = { git = "https://github.com/ciresnave/candlelight", features = ["cuda-full"] }
-
-# Or select specific features
-candlelight = { git = "https://github.com/ciresnave/candlelight", features = ["cuda", "flash-attn"] }
-
-# CPU-only
+# All features enabled by default for "it just works" experience
 candlelight = { git = "https://github.com/ciresnave/candlelight" }
+
+# Minimal CPU-only configuration
+candlelight = { git = "https://github.com/ciresnave/candlelight", default-features = false }
+
+# CPU with specific features
+candlelight = { git = "https://github.com/ciresnave/candlelight", default-features = false, features = ["datasets"] }
 ```
 
 ## Usage
@@ -78,9 +92,26 @@ fn main() -> Result<()> {
 use candlelight::prelude::*;
 
 fn build_model(vb: VarBuilder) -> Result<impl Module> {
-    let linear = Linear::new(vb.pp("fc"), 768, 256)?;
-    let activation = Activation::Gelu;
-    Ok((linear, activation))
+    let linear = linear(768, 256, vb.pp("fc"))?;
+    Ok(linear)
+}
+```
+
+### Using optimizers
+
+```rust
+use candlelight::prelude::*;
+use candlelight::optimizers::adamw;
+
+fn train(model: &impl Module, data: &Tensor) -> Result<()> {
+    let mut optimizer = adamw(model.parameters(), Default::default())?;
+    
+    // Training loop
+    for epoch in 0..10 {
+        let loss = model.forward(data)?;
+        optimizer.backward_step(&loss)?;
+    }
+    Ok(())
 }
 ```
 
@@ -96,7 +127,8 @@ candle-flash-attn = { git = "...", rev = "...", optional = true }
 
 ### After:
 ```toml
-candlelight = { git = "https://github.com/ciresnave/candlelight", features = ["cuda", "flash-attn"] }
+# All optimizations enabled by default!
+candlelight = { git = "https://github.com/ciresnave/candlelight" }
 ```
 
 ### Code changes:
@@ -114,9 +146,15 @@ use candlelight::prelude::*;
 
 ## CUDA Requirements
 
-- **CUDA Toolkit**: 12.4+ or 13.0+
-- **Visual Studio**: 2022 (any version with latest Candle git snapshot)
+- **CUDA Toolkit**: 12.4+ or 13.0+ (13.0+ recommended)
+- **cuDNN**: 8.9+ or 9.x (optional but recommended for `cudnn` feature)
+- **Visual Studio**: 2022 v17.12+ with MSVC toolchain (Windows)
 - **GPU**: NVIDIA GPU with compute capability 6.0+
+
+### Windows MSVC Notes
+Candlelight includes fixes for Windows MSVC compatibility:
+- Large object compilation support (`/bigobj`)
+- Proper C++ standard library linking (no `stdc++.lib` errors)
 
 ## Repository
 

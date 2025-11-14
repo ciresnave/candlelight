@@ -119,7 +119,10 @@ pub use candle_optimisers as optimisers;
 #[cfg(feature = "basin-hopping")]
 pub use candle_bhop as bhop;
 
-// Comprehensive re-exports for features (enabled by default)
+// =============================================================================
+// Optional feature module re-exports
+// =============================================================================
+
 #[cfg(feature = "flash-attn")]
 pub mod flash_attention {
     pub use candle_flash_attn::*;
@@ -132,7 +135,25 @@ pub mod fused_ops {
 
 #[cfg(feature = "datasets")]
 pub mod data {
+    // Re-export the entire candle_datasets module (top-level items)
     pub use candle_datasets::*;
+
+    // Submodules
+    pub mod batcher {
+        pub use candle_datasets::batcher::*;
+    }
+
+    pub mod hub {
+        pub use candle_datasets::hub::*;
+    }
+
+    pub mod nlp {
+        pub use candle_datasets::nlp::*;
+    }
+
+    pub mod vision {
+        pub use candle_datasets::vision::*;
+    }
 }
 
 #[cfg(feature = "optimizers")]
@@ -170,9 +191,42 @@ pub mod basin_hopping {
     pub use candle_bhop::*;
 }
 
-// Comprehensive transformers re-exports for easy access
+// =============================================================================
+// candle_transformers module re-exports
+// =============================================================================
+
 pub mod transformers_models {
+    // Re-export the entire candle_transformers module (top-level items)
     pub use candle_transformers::*;
+
+    // Submodules
+    pub mod generation {
+        pub use candle_transformers::generation::*;
+    }
+
+    pub mod models {
+        pub use candle_transformers::models::*;
+    }
+
+    pub mod object_detection {
+        pub use candle_transformers::object_detection::*;
+    }
+
+    pub mod pipelines {
+        pub use candle_transformers::pipelines::*;
+    }
+
+    pub mod quantized_nn {
+        pub use candle_transformers::quantized_nn::*;
+    }
+
+    pub mod quantized_var_builder {
+        pub use candle_transformers::quantized_var_builder::*;
+    }
+
+    pub mod utils {
+        pub use candle_transformers::utils::*;
+    }
 }
 
 // Re-export commonly used types for convenience from the root
@@ -182,48 +236,161 @@ pub use candle_nn::VarBuilder;
 // Re-export everything from candle-core at the root for maximum convenience
 pub use candle_core::*;
 
-// Re-export nn module items at candlelight::nn::*
+// =============================================================================
+// candle_nn module re-exports
+// =============================================================================
+
 pub mod nn {
-    // Re-export the entire candle_nn module
+    // Re-export the entire candle_nn module (top-level items)
     pub use candle_nn::*;
 
-    // Explicitly re-export key items for clarity (these should already be available via the glob import above)
-    pub use candle_nn::{
-        // Layer constructor functions
-        embedding,
-        layer_norm,
-        linear,
-        // Optimizers
-        optim::{AdamW, Optimizer, ParamsAdamW, SGD},
+    // Submodules
+    pub mod activation {
+        pub use candle_nn::activation::*;
+    }
 
-        // Layer types
-        Dropout,
-        Embedding,
-        LayerNorm,
-        Linear,
+    pub mod batch_norm {
+        pub use candle_nn::batch_norm::*;
+    }
 
-        // Variable management
-        VarBuilder,
-        VarMap,
-    };
+    pub mod conv {
+        pub use candle_nn::conv::*;
+    }
+
+    pub mod embedding {
+        pub use candle_nn::embedding::*;
+    }
+
+    pub mod encoding {
+        pub use candle_nn::encoding::*;
+    }
+
+    pub mod func {
+        pub use candle_nn::func::*;
+    }
+
+    pub mod group_norm {
+        pub use candle_nn::group_norm::*;
+    }
+
+    pub mod init {
+        pub use candle_nn::init::*;
+    }
+
+    pub mod layer_norm {
+        pub use candle_nn::layer_norm::*;
+    }
+
+    pub mod linear {
+        pub use candle_nn::linear::*;
+    }
+
+    pub mod loss {
+        pub use candle_nn::loss::*;
+    }
+
+    pub mod ops {
+        pub use candle_nn::ops::*;
+    }
+
+    pub mod optim {
+        pub use candle_nn::optim::*;
+    }
+
+    pub mod rnn {
+        pub use candle_nn::rnn::*;
+    }
+
+    pub mod sequential {
+        pub use candle_nn::sequential::*;
+    }
+
+    pub mod var_builder {
+        pub use candle_nn::var_builder::*;
+    }
+
+    pub mod var_map {
+        pub use candle_nn::var_map::*;
+    }
 }
 
-// Re-export backprop module items at candlelight::backprop::*
+// =============================================================================
+// candle_core module re-exports
+// =============================================================================
+
+pub mod backend {
+    pub use candle_core::backend::*;
+}
+
 pub mod backprop {
-    // Re-export everything from candle_core::backprop
     pub use candle_core::backprop::*;
 }
 
-// Re-export quantized module for quantized tensor support at candlelight::quantized::*
+pub mod cpu {
+    pub use candle_core::cpu::*;
+}
+
+pub mod cpu_backend {
+    pub use candle_core::cpu_backend::*;
+}
+
+#[cfg(feature = "cuda")]
+pub mod cuda_backend {
+    pub use candle_core::cuda_backend::*;
+}
+
+#[cfg(feature = "cudnn")]
+pub mod cudnn {
+    pub use candle_core::cudnn::*;
+}
+
+pub mod display {
+    pub use candle_core::display::*;
+}
+
+pub mod error {
+    pub use candle_core::error::*;
+}
+
+pub mod layout {
+    pub use candle_core::layout::*;
+}
+
+#[cfg(feature = "metal")]
+pub mod metal_backend {
+    pub use candle_core::metal_backend::*;
+}
+
+pub mod npy {
+    pub use candle_core::npy::*;
+}
+
+pub mod pickle {
+    pub use candle_core::pickle::*;
+}
+
 pub mod quantized {
-    // Re-export everything from candle_core::quantized
     pub use candle_core::quantized::*;
 }
 
-// Re-export safetensors module for SafeTensors loading at candlelight::safetensors::*
 pub mod safetensors {
-    // Re-export everything from candle_core::safetensors
     pub use candle_core::safetensors::*;
+}
+
+pub mod scalar {
+    pub use candle_core::scalar::*;
+}
+
+pub mod shape {
+    pub use candle_core::shape::*;
+}
+
+pub mod test_utils {
+    pub use candle_core::test_utils::*;
+}
+
+pub mod utils {
+    pub use candle_core::utils::*;
 }
 
 /// Curated re-exports of the most commonly used Candle functionality

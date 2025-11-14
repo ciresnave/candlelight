@@ -27,10 +27,12 @@
         "optimizers",
         "basin-hopping",
         "layer-norm",
+        "cudnn",
     ]
 
     # Hardware acceleration
     cuda = ["candle-core/cuda", "candle-nn/cuda", "candle-transformers/cuda"]
+    cudnn = ["candle-core/cudnn", "cuda"]
     metal = [
         "candle-core/metal",
         "candle-nn/metal",
@@ -72,8 +74,8 @@
     
     # Additional optimizers - using our fork with updated dependencies for CUDA 13.0 compatibility
     # PR submitted to upstream: https://github.com/KGrewal1/optimisers/pull/29
-    candle-optimisers = { git = "https://github.com/ciresnave/candle-optimisers", branch = "update-candle-deps-for-cuda-13", optional = true }
+    candle-optimisers = { git = "https://github.com/ciresnave/candle-optimisers", optional = true }
     
     # Basin hopping global optimization - using our fork with updated dependencies
     # PR submitted to upstream: https://github.com/KGrewal1/candle-bhop/pull/1
-    candle-bhop = { git = "https://github.com/ciresnave/candle-bhop", branch = "update-to-candle-0.9", optional = true }
+    candle-bhop = { git = "https://github.com/ciresnave/candle-bhop", optional = true }
