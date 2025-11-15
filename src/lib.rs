@@ -192,6 +192,38 @@ pub mod basin_hopping {
 }
 
 // =============================================================================
+// HuggingFace Hub and tokenizers module re-exports
+// =============================================================================
+
+#[cfg(feature = "hub")]
+pub mod hub {
+    // Re-export HuggingFace Hub for model/dataset downloads
+    pub use hf_hub::*;
+}
+
+#[cfg(feature = "tokenizers")]
+pub mod tokenizers {
+    // Re-export HuggingFace tokenizers
+    pub use tokenizers::*;
+}
+
+// =============================================================================
+// CUDA utilities module re-exports
+// =============================================================================
+
+#[cfg(feature = "cuda-vmm")]
+pub mod cuda_vmm {
+    // Re-export CUDA Virtual Memory Management
+    pub use candle_cuda_vmm::*;
+}
+
+#[cfg(feature = "cublaslt")]
+pub mod cublaslt {
+    // Re-export cuBLASLt bindings
+    pub use candle_cublaslt::*;
+}
+
+// =============================================================================
 // candle_transformers module re-exports
 // =============================================================================
 

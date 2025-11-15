@@ -28,6 +28,8 @@
         "basin-hopping",
         "layer-norm",
         "cudnn",
+        "hub",
+        "tokenizers",
     ]
 
     # Hardware acceleration
@@ -44,7 +46,7 @@
     layer-norm = ["candle-layer-norm", "cuda"]
 
     # Convenience: enable all CUDA optimizations
-    cuda-full = ["cuda", "flash-attn", "layer-norm"]
+    cuda-full = ["cuda", "flash-attn", "layer-norm", "cuda-vmm", "cublaslt"]
 
     # Data loading utilities
     datasets = ["candle-datasets"]
@@ -54,6 +56,14 @@
     
     # Global optimization algorithms
     basin-hopping = ["candle-bhop"]
+    
+    # HuggingFace Hub and tokenizers
+    hub = ["hf-hub"]
+    tokenizers = ["dep:tokenizers"]
+    
+    # CUDA utilities
+    cuda-vmm = ["candle-cuda-vmm", "cuda"]
+    cublaslt = ["candle-cublaslt", "cuda"]
 
 [dependencies]
     # Core Candle framework - using git snapshot for CUDA 13.0 support via cudarc 0.17.1+
@@ -79,3 +89,15 @@
     # Basin hopping global optimization - using our fork with updated dependencies
     # PR submitted to upstream: https://github.com/KGrewal1/candle-bhop/pull/1
     candle-bhop = { git = "https://github.com/ciresnave/candle-bhop", optional = true }
+    
+    # HuggingFace Hub for model/dataset downloads
+    hf-hub = { version = "0.4", optional = true }
+    
+    # HuggingFace tokenizers (BPE, WordPiece, SentencePiece, etc.)
+    tokenizers = { version = "0.22", default-features = false, features = ["onig"], optional = true }
+    
+    # CUDA Virtual Memory Management for elastic KV cache allocation
+    candle-cuda-vmm = { version = "0.1", optional = true }
+    
+    # cuBLASLt bindings for highly optimized matrix operations
+    candle-cublaslt = { version = "0.0.1", optional = true }

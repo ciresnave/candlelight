@@ -15,6 +15,10 @@ The Candle ecosystem consists of multiple crates that must be kept in sync:
 - `candle-datasets` - Dataset loading utilities
 - `candle-optimisers` - Advanced optimizers (AdamW, Lion, etc.)
 - `candle-bhop` - Basin-hopping global optimization
+- `hf-hub` - HuggingFace Hub for downloading models/datasets
+- `tokenizers` - HuggingFace tokenizers (BPE, WordPiece, etc.)
+- `candle-cuda-vmm` - CUDA Virtual Memory Management
+- `candle-cublaslt` - cuBLASLt bindings for optimized matrix ops
 
 Managing these across multiple projects is tedious and error-prone. Candlelight solves this by centralizing version management.
 
@@ -42,13 +46,17 @@ Following the "it just works" philosophy, these features are enabled by default:
 - ✅ `datasets` - Dataset loading utilities
 - ✅ `optimizers` - Advanced optimizers (AdamW, Lion, Sophia, etc.)
 - ✅ `basin-hopping` - Basin-hopping global optimization
+- ✅ `hub` - HuggingFace Hub for model/dataset downloads
+- ✅ `tokenizers` - HuggingFace tokenizers (BPE, WordPiece, SentencePiece)
 
 ### Hardware Acceleration
 - `cuda` - NVIDIA GPU support via CUDA (auto-enabled by default features)
 - `metal` - Apple Silicon GPU support via Metal
 
 ### Additional Features
-- `cuda-full` - All CUDA optimizations (convenience feature, redundant with defaults)
+- `cuda-full` - All CUDA optimizations (flash-attn, layer-norm, cuda-vmm, cublaslt)
+- `cuda-vmm` - CUDA Virtual Memory Management for elastic KV cache allocation
+- `cublaslt` - cuBLASLt bindings for highly optimized matrix operations
 
 ## Installation
 
