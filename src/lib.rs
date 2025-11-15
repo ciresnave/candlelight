@@ -223,6 +223,37 @@ pub mod cublaslt {
     pub use candle_cublaslt::*;
 }
 
+// ML operation utilities
+#[cfg(feature = "einops")]
+pub mod einops {
+    // Re-export Einstein notation operations
+    pub use candle_einops::*;
+}
+
+#[cfg(feature = "birnn")]
+pub mod birnn {
+    // Re-export bidirectional RNN
+    pub use candle_birnn::*;
+}
+
+#[cfg(feature = "lstm")]
+pub mod lstm {
+    // Re-export LSTM layers
+    pub use candle_lstm::*;
+}
+
+#[cfg(feature = "crf")]
+pub mod crf {
+    // Re-export Conditional Random Fields
+    pub use candle_crf::*;
+}
+
+#[cfg(feature = "approx")]
+pub mod approx {
+    // Re-export tensor approximate comparison
+    pub use candle_approx::*;
+}
+
 // =============================================================================
 // candle_transformers module re-exports
 // =============================================================================

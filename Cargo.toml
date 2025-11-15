@@ -64,6 +64,13 @@
     # CUDA utilities
     cuda-vmm = ["candle-cuda-vmm", "cuda"]
     cublaslt = ["candle-cublaslt", "cuda"]
+    
+    # ML operation utilities
+    einops = ["candle-einops"]
+    birnn = ["candle-birnn"]
+    lstm = ["candle-lstm"]
+    crf = ["candle-crf"]
+    approx = ["candle-approx"]
 
 [dependencies]
     # Core Candle framework - using git snapshot for CUDA 13.0 support via cudarc 0.17.1+
@@ -101,3 +108,10 @@
     
     # cuBLASLt bindings for highly optimized matrix operations
     candle-cublaslt = { version = "0.0.1", optional = true }
+    
+    # ML utilities - using our forks with updated Candle v0.9.2-alpha.1 compatibility
+    candle-einops = { git = "https://github.com/ciresnave/candle-einops", optional = true }
+    candle-birnn = { git = "https://github.com/ciresnave/candle-birnn", optional = true }
+    candle-lstm = { git = "https://github.com/ciresnave/candle-lstm", optional = true }
+    candle-crf = { git = "https://github.com/ciresnave/candle-crf", optional = true }
+    candle-approx = { git = "https://github.com/ciresnave/candle-approx", optional = true }

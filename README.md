@@ -19,6 +19,11 @@ The Candle ecosystem consists of multiple crates that must be kept in sync:
 - `tokenizers` - HuggingFace tokenizers (BPE, WordPiece, etc.)
 - `candle-cuda-vmm` - CUDA Virtual Memory Management
 - `candle-cublaslt` - cuBLASLt bindings for optimized matrix ops
+- `candle-einops` - Einstein notation for tensor operations
+- `candle-birnn` - Bidirectional RNN implementations
+- `candle-lstm` - Optimized LSTM layers
+- `candle-crf` - Conditional Random Fields
+- `candle-approx` - Approximate tensor comparison utilities
 
 Managing these across multiple projects is tedious and error-prone. Candlelight solves this by centralizing version management.
 
@@ -29,6 +34,11 @@ Managing these across multiple projects is tedious and error-prone. Candlelight 
 - **candle-layer-norm** - [Fork](https://github.com/ciresnave/candle-layer-norm) with CUDA 13.0 + cudarc 0.17.8 + Windows MSVC fixes ([PR #2](https://github.com/EricLBuehler/candle-layer-norm/pull/2))
 - **candle-optimisers** - [Fork](https://github.com/ciresnave/candle-optimisers) updated for Candle v0.9.2-alpha.1 ([PR #29](https://github.com/KGrewal1/optimisers/pull/29))
 - **candle-bhop** - [Fork](https://github.com/ciresnave/candle-bhop) updated for Candle v0.9.2-alpha.1 ([PR #1](https://github.com/KGrewal1/candle-bhop/pull/1))
+- **candle-einops** - [Fork](https://github.com/ciresnave/candle-einops) updated for Candle v0.9.2-alpha.1 (PR pending)
+- **candle-birnn** - [Fork](https://github.com/ciresnave/candle-birnn) updated for Candle v0.9.2-alpha.1 (PR pending)
+- **candle-lstm** - [Fork](https://github.com/ciresnave/candle-lstm) updated for Candle v0.9.2-alpha.1 (PR pending)
+- **candle-crf** - [Fork](https://github.com/ciresnave/candle-crf) updated for Candle v0.9.2-alpha.1 (PR pending)
+- **candle-approx** - [Fork](https://github.com/ciresnave/candle-approx) updated for Candle v0.9.2-alpha.1 (PR pending)
 
 Once upstream PRs are merged and Candle v0.10 is released, we'll switch to stable crates.io releases.
 
@@ -57,6 +67,13 @@ Following the "it just works" philosophy, these features are enabled by default:
 - `cuda-full` - All CUDA optimizations (flash-attn, layer-norm, cuda-vmm, cublaslt)
 - `cuda-vmm` - CUDA Virtual Memory Management for elastic KV cache allocation
 - `cublaslt` - cuBLASLt bindings for highly optimized matrix operations
+
+### ML Operation Utilities
+- `einops` - Einstein notation for flexible tensor operations
+- `birnn` - Bidirectional RNN implementations
+- `lstm` - Optimized LSTM layers
+- `crf` - Conditional Random Fields for sequence labeling
+- `approx` - Approximate tensor comparison for testing
 
 ## Installation
 
