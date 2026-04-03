@@ -71,22 +71,26 @@
     lstm = ["candle-lstm"]
     crf = ["candle-crf"]
     approx = ["candle-approx"]
+    
+    # ML extensions and utilities
+    embed = ["candle_embed"]           # Text embeddings with HuggingFace models
+    ext = ["candle-ext"]                 # PyTorch-like functions (chunk, scatter, etc.)
+    rl-agent = ["border-candle-agent"]   # Reinforcement learning agent utilities
 
 [dependencies]
     # Core Candle framework - v0.9.2-alpha.1 includes CUDA 13.0 support via cudarc ^0.17.3
-    candle-core         = "0.9.2-alpha.1"
-    candle-nn           = "0.9.2-alpha.1"
-    candle-transformers = "0.9.2-alpha.1"
+    candle-core         = "0.10.2"
+    candle-nn           = "0.10.2"
+    candle-transformers = "0.10.2"
 
     # Optional CUDA accelerations
-    candle-flash-attn = { version = "0.9.2-alpha.1", optional = true }
+    candle-flash-attn = { version = "0.10.2", optional = true }
 
-    # Fused LayerNorm/RMSNorm - using our fork with updated dependencies for CUDA 13.0 compatibility + Windows large object fix + cudarc 0.17.8 API compatibility
     # PR will be submitted to upstream: https://github.com/EricLBuehler/candle-layer-norm
     candle-layer-norm = { git = "https://github.com/ciresnave/candle-layer-norm", optional = true }
 
     # Data utilities (optional)
-    candle-datasets = { version = "0.9.2-alpha.1", optional = true }
+    candle-datasets = { version = "0.10.2", optional = true }
     
     # Additional optimizers - using our fork with updated dependencies for CUDA 13.0 compatibility
     # PR submitted to upstream: https://github.com/KGrewal1/optimisers/pull/29
@@ -97,7 +101,7 @@
     candle-bhop = { git = "https://github.com/ciresnave/candle-bhop", optional = true }
     
     # HuggingFace Hub for model/dataset downloads
-    hf-hub = { version = "0.4", optional = true }
+    hf-hub = { version = "0.5.0", optional = true }
     
     # HuggingFace tokenizers (BPE, WordPiece, SentencePiece, etc.)
     tokenizers = { version = "0.22", default-features = false, features = ["onig"], optional = true }
@@ -114,3 +118,8 @@
     candle-lstm = { git = "https://github.com/ciresnave/candle-lstm", optional = true }
     candle-crf = { git = "https://github.com/ciresnave/candle-crf", optional = true }
     candle-approx = { git = "https://github.com/ciresnave/candle-approx", optional = true }
+    
+    # Additional ML utilities and extensions
+    candle_embed = { git = "https://github.com/ciresnave/candle_embed", optional = true }
+    candle-ext = { git = "https://github.com/ciresnave/candle-ext", optional = true }
+    border-candle-agent = { git = "https://github.com/ciresnave/border", optional = true }

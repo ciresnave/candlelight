@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="candlelight.gif" alt="Candlelight Logo" width="200"/>
+</p>
+
 # Candlelight
 
 **Unified wrapper for the Candle ML framework ecosystem**
@@ -32,7 +36,7 @@ Managing these across multiple projects is tedious and error-prone. Candlelight 
 ⚠️ **Temporary Git Dependencies**: Currently using git snapshots to support:
 - **Candle** (git rev `db08cc0a`) - CUDA 13.0 support via cudarc 0.17.8+
 - **candle-layer-norm** - [Fork](https://github.com/ciresnave/candle-layer-norm) with CUDA 13.0 + cudarc 0.17.8 + Windows MSVC fixes ([PR #2](https://github.com/EricLBuehler/candle-layer-norm/pull/2))
-- **candle-optimisers** - [Fork](https://github.com/ciresnave/candle-optimisers) updated for Candle v0.9.2-alpha.1 ([PR #29](https://github.com/KGrewal1/optimisers/pull/29))
+- **candle-optimisers** - [Fork](https://github.com/ciresnave/candle-optimisers) updated for Candle v0.9.2-alpha.1 ([PR #30](https://github.com/KGrewal1/optimisers/pull/30))
 - **candle-bhop** - [Fork](https://github.com/ciresnave/candle-bhop) updated for Candle v0.9.2-alpha.1 ([PR #1](https://github.com/KGrewal1/candle-bhop/pull/1))
 - **candle-einops** - [Fork](https://github.com/ciresnave/candle-einops) updated for Candle v0.9.2-alpha.1 (PR pending)
 - **candle-birnn** - [Fork](https://github.com/ciresnave/candle-birnn) updated for Candle v0.9.2-alpha.1 (PR pending)

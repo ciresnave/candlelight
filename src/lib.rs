@@ -255,6 +255,28 @@ pub mod approx {
 }
 
 // =============================================================================
+// Additional ML utilities and extensions
+// =============================================================================
+
+#[cfg(feature = "embed")]
+pub mod embed {
+    // Re-export text embedding utilities with HuggingFace models
+    pub use candle_embed::*;
+}
+
+#[cfg(feature = "ext")]
+pub mod ext {
+    // Re-export PyTorch-like extension functions
+    pub use candle_ext::*;
+}
+
+#[cfg(feature = "rl-agent")]
+pub mod rl_agent {
+    // Re-export reinforcement learning agent utilities
+    pub use border_candle_agent::*;
+}
+
+// =============================================================================
 // candle_transformers module re-exports
 // =============================================================================
 
@@ -404,7 +426,8 @@ pub mod cuda_backend {
 
 #[cfg(feature = "cudnn")]
 pub mod cudnn {
-    pub use candle_core::cudnn::*;
+    // The cudnn feature enables cuDNN acceleration internally in candle-core
+    // (e.g., for conv operations) but exposes no public API to re-export.
 }
 
 pub mod display {
