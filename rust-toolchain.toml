@@ -1,0 +1,17 @@
+# The compiler this project is built and gated with.
+#
+# Pinned because a ref names the code and does not name the compiler. Portfolio
+# ruling, 2026-08-21: explicit version, every Rust repo, no aliases. `stable`
+# resolves differently by machine and by day, which is the property being
+# removed — a green run under an alias is true of an unnamed compiler and
+# reproducible from none.
+#
+# Verified before pinning rather than after: on 1.98.0, with
+# `--no-default-features`, `cargo build`, `cargo test`, `cargo clippy
+# --all-targets` and `cargo fmt --check` all exit 0. This box's default is
+# nightly 1.100, so the earlier verification of the candle 0.11 bump ran on a
+# DIFFERENT compiler than this pin names; it was re-run on 1.98.0 before this
+# file was written.
+[toolchain]
+channel = "1.98.0"
+components = ["clippy", "rustfmt"]

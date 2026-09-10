@@ -1,0 +1,141 @@
+name: CI
+
+# There was no CI in this repository at all — no `.github`, no workflow of any
+# kind. Measured 2026-09-10: `.github/workflows` returned 404 and the only
+# check-run on a pull request head was a Sourcery review reporting `skipped`.
+#
+# ⚠️ That matters more here than in a leaf project. Four repositories depend on
+# candlelight, and a three-line manifest change merged through it days ago left
+# two crates of a five-crate lockstep family a major version behind. The defect
+# was invisible in the diff — you could only see it by reading the lines that
+# did NOT change — and nothing in this repository was going to catch it.
+#
+# ⚠️ WHAT THIS WORKFLOW COVERS, AND WHAT IT DOES NOT. Stated here rather than
+# left for a green tick to imply, because a gate that reports a pass without
+# naming its scope is a count with no denominator.
+#
+#   COVERED      --no-default-features
+#                This is not an arbitrary choice: it is exactly how `mlmf`
+#                consumes this crate, and it is the only configuration that
+#                builds on a machine without a GPU.
+#
+#   NOT COVERED  cuda  cudnn  metal  flash-attn  layer-norm
+#                cuda-full  cuda-vmm  cublaslt
+#                ...and therefore `default`, which pulls cudnn -> cuda.
+#
+# ⚠️ THE UNCOVERED SET IS DELIBERATELY NOT IN THIS FILE AS A JOB. A GitHub
+# runner has no CUDA device and `flash-attn`'s build script fetches CUTLASS and
+# breaks on Windows MAX_PATH, so those jobs would be permanently red — and a
+# permanently-red gate cannot announce a NEW regression. It is not a gate; it
+# is a decoration that suppresses the next real failure. Another repository in
+# this portfolio paid five commits to learn that.
+#
+# Add them when hardware exists, as their own job, so a failure there is a
+# signal rather than the status quo.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gates:
+    # Windows is in the matrix because this crate's principal consumer is
+    # Windows-primary, and because the one build failure anybody has hit here
+    # (CUTLASS path length) is Windows-specific. Linux is in it because it is
+    # what most contributors will run.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned, not `@stable`. Must match rust-toolchain.toml; two places
+      # holding one version is how they drift, and the pin is the whole point.
+      - uses: dtolnay/rust-toolchain@1.98.0
+        with:
+          components: clippy, rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+
+      # Formatting first: the cheapest failure to produce and to fix. A
+      # drifting file makes this check unenableable, so the drift protects
+      # itself until someone sweeps it.
+      - name: cargo fmt --check
+        run: cargo fmt --check
+
+      - name: cargo build --no-default-features
+        run: cargo build --no-default-features
+
+      - name: cargo test --no-default-features
+        run: cargo test --no-default-features
+
+      # ⚠️ `--all-targets`, so tests and examples are linted too. Without it a
+      # lint error in a test is invisible until someone runs clippy by hand.
+      - name: cargo clippy --no-default-features --all-targets
+        run: cargo clippy --no-default-features --all-targets -- -D warnings
+
+  # ⚠️ THE RATCHET. The gates above verify the code; this verifies that the
+  # thing the gates were written for has not silently regrown.
+  #
+  # Shipped in the same commit as the gates deliberately. A one-time sweep does
+  # not fix a property that regrows: elsewhere in this portfolio a licence
+  # sweep landed at 100% and drifted within days because files were added after
+  # it, and the sweep had no way to complain.
+  lockstep-family:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The five candle crates publish together, on one version ladder. A
+      # PARTIAL bump of a lockstep family is worse than no bump: it looks
+      # compliant in a diff, and the incompatibility only appears when someone
+      # enables an optional feature months later — a second `candle-core` in
+      # the graph, which is exactly what the 0.11 bump existed to remove.
+      #
+      # This is what actually happened, and it was caught by a reviewer reading
+      # the lines that did not change rather than by anything mechanical.
+      - name: the five candle crates carry one version
+        shell: bash
+        run: |
+          set -o pipefail
+          # Read the declared version of each. `grep -o` on the manifest, not a
+          # resolved lockfile: the question is what this crate ASKS for.
+          declare -A v
+          for c in candle-core candle-nn candle-transformers candle-flash-attn candle-datasets; do
+            line=$(grep -E "^\s*${c}\s*=" Cargo.toml || true)
+            if [ -z "$line" ]; then
+              echo "MISSING: ${c} is not declared in Cargo.toml."
+              echo "If it was removed deliberately, remove it from this check too."
+              exit 1
+            fi
+            ver=$(printf '%s' "$line" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+            if [ -z "$ver" ]; then
+              echo "UNPARSEABLE: could not read a version from: $line"
+              exit 1
+            fi
+            v[$c]=$ver
+            printf '  %-22s %s\n' "$c" "$ver"
+          done
+          # ⚠️ Compare against candle-core rather than against a hardcoded
+          # number. A literal here would need editing on every bump, and a
+          # check that must be edited to stay true is one that gets edited to
+          # stay quiet.
+          base=${v[candle-core]}
+          fail=0
+          for c in "${!v[@]}"; do
+            if [ "${v[$c]}" != "$base" ]; then
+              echo "MISMATCH: ${c} is ${v[$c]}, candle-core is ${base}"
+              fail=1
+            fi
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo ""
+            echo "These five crates publish in lockstep on one version ladder."
+            echo "Bumping some and not others puts two candle-core versions in"
+            echo "any graph that enables the lagging crate's feature."
+            exit 1
+          fi
+          echo "OK: all five declare ${base}"
