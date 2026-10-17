@@ -37,6 +37,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   gates:
     # Windows is in the matrix because this crate's principal consumer is
@@ -50,15 +53,15 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       # Pinned, not `@stable`. Must match rust-toolchain.toml; two places
       # holding one version is how they drift, and the pin is the whole point.
-      - uses: dtolnay/rust-toolchain@1.98.0
+      - uses: dtolnay/rust-toolchain@5059963b1731bf1580991b5f3b1eecfb5da406c0 # 1.98.0 (branch)
         with:
           components: clippy, rustfmt
 
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
 
       # Formatting first: the cheapest failure to produce and to fix. A
       # drifting file makes this check unenableable, so the drift protects
@@ -87,7 +90,7 @@ jobs:
   lockstep-family:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       # The five candle crates publish together, on one version ladder. A
       # PARTIAL bump of a lockstep family is worse than no bump: it looks
